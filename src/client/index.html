@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skapis</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .modal-content input,
+        .modal-content button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .modal-content .switch {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .modal-content .switch span {
+            color: #1e3a8a;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+		
+		        .approved-note {
+            font-size: 12px;
+            color: #555;
+            text-align: center;
+            margin-top: -8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sign up / Sign in Modal -->
+    <div id="popup" class="modal">
+        <div class="modal-content">
+            <form id="signupForm">
+                <h2>Sign Up</h2>
+                <input type="text" placeholder="Name" required>
+                <input type="text" placeholder="Surname" required>
+                <label>Birthday:
+                    <input type="date" id="birthday" required>
+                </label>
+                <input type="tel" placeholder="Telephone Number" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <label>Approved<input type="checkbox" required></label>
+                <div class="approved-note">By checking this box, you agree to our terms and policies.</div>
+                <button type="submit">Sign Up</button>
+                <p class="switch">Already have an account? <span id="switchToSignin">Sign In</span></p>
+            </form>
+
+            <form id="signinForm" style="display: none;">
+                <h2>Sign In</h2>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+	<script src="script.js"></script>
+	
+</body>
+</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skapis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+		<div class="logo">
+			<a href="index.html" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit;">
+				<img src="assets/skapisLogo.jpeg" style="width: 70px; height: 50px; object-fit: contain; margin-bottom: 4px;">
+				<span>Skapis</span>
+			</a>
+		</div>
+		<input type="search" id="searchInput" placeholder="Search...">
+		<div class="user-icon">👤</div>
+	</header>
+
+    <section class="flash-discounts">
+    <h2>Flash Discounts!!</h2>
+    <div class="slider-container">
+        <button class="slider-btn left">←</button>
+        <div class="slider">
+            <!-- 10 Items with Images -->
+            <div class="frame" data-id="1">
+				<img src="assets/images.jpg" alt="Discount Item 1" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+				<p>Example Slightly Used Bag- Medium Size - $15 - From Blabla Store</p>
+			</div>
+            <div class="frame">
+                <img src="assets/exampletshirt.jpg" alt="Discount Item 2" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Example - Size L - $20</p>
+            </div>
+            <div class="frame">
+                <img src="assets/indir.jpg" alt="Discount Item 3" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Example Furniture - $30 - From Blabla Store</p>
+            </div>
+            <div class="frame">
+                <img src="assets/tshirtironmaiden.jpg" alt="Discount Item 4" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Example Iron Maiden Tshirt - Size M - $40</p>
+            </div>
+            <div class="frame">
+                <img src="assets/bracelets.jpg" alt="Discount Item 5" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Example Handmade Bracelet - $50</p>
+            </div>
+            <div class="frame">
+                <img src="assets/handmade.jpg" alt="Discount Item 6" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Item 6 - Size XL - $60</p>
+            </div>
+            <div class="frame">
+                <img src="assets/example.jpg" alt="Discount Item 7" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Item 7 - Size S - $70</p>
+            </div>
+            <div class="frame">
+                <img src="assets/example.jpg" alt="Discount Item 8" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Item 8 - Size M - $80</p>
+            </div>
+            <div class="frame">
+                <img src="assets/handmade.jpg" alt="Discount Item 9" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Item 9 - Size L - $90</p>
+            </div>
+            <div class="frame">
+                <img src="assets/exampletshirt.jpg" alt="Discount Item 10" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+                <p>Item 10 - Size XL - $100</p>
+            </div>
+        </div>
+        <button class="slider-btn right">→</button>
+    </div>
+</section>
+
+    <section class="chosen-for-you">
+        <h2>Chosen For You</h2>
+        <div class="slider-container">
+            <button class="slider-btn left">←</button>
+            <div class="slider">
+                <!-- 10 Items -->
+                <div class="frame" data-id="1">
+					<img src="assets/exampletshirt.jpg" alt="Discount Item 1" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 1 - Size M - $10</p>
+				</div>
+				<div class="frame">
+					<img src="assets/exampletshirt.jpg" alt="Discount Item 2" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 2 - Size L - $20</p>
+				</div>
+				<div class="frame">
+					<img src="assets/exampletshirt.jpg" alt="Discount Item 3" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 3 - Size S - $30</p>
+				</div>
+				<div class="frame">
+					<img src="assets/handmade.jpg" alt="Discount Item 4" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 4 - Size M - $40</p>
+				</div>
+				<div class="frame">
+					<img src="assets/handmade.jpg" alt="Discount Item 5" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 5 - Size L - $50</p>
+				</div>
+				<div class="frame">
+					<img src="assets/handmade.jpg" alt="Discount Item 6" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 6 - Size XL - $60</p>
+				</div>
+				<div class="frame">
+					<img src="assets/example.jpg" alt="Discount Item 7" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 7 - Size S - $70</p>
+				</div>
+				<div class="frame">
+					<img src="assets/example.jpg" alt="Discount Item 8" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 8 - Size M - $80</p>
+				</div>
+				<div class="frame">
+					<img src="assets/handmade.jpg" alt="Discount Item 9" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 9 - Size L - $90</p>
+				</div>
+				<div class="frame">
+					<img src="assets/exampletshirt.jpg" alt="Discount Item 10" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+					<p>Item 10 - Size XL - $100</p>
+				</div>
+				</div>
+            <button class="slider-btn right">→</button>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>
