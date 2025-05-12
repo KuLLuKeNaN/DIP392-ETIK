@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Sign Up - Skapis</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-box">
+      <form id="signupForm">
+        <h2>Sign Up</h2>
+        <input type="text" placeholder="Name" required>
+        <input type="text" placeholder="Surname" required>
+        <label>Birthday:
+          <input type="date" id="birthday" required>
+        </label>
+        <input type="tel" placeholder="Telephone Number" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <label><input type="checkbox" required> Approved</label>
+        <button type="submit">Sign Up</button>
+        <p class="switch">Already have an account? <span id="switchToSignin">Sign In</span></p>
+      </form>
+
+      <form id="signinForm" style="display: none;">
+        <h2>Sign In</h2>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+        <p class="switch">Don't have an account? <span id="switchToSignup">Sign Up</span></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

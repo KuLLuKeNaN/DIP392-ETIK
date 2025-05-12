@@ -1,0 +1,13 @@
+# node_modules klasörü
+node_modules/
+
+# Ortam değişkenleri (şifreler, bağlantılar)
+.env
+
+# Log dosyaları
+logs/
+*.log
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
