@@ -2,12 +2,13 @@ const Product = require('../models/Product');
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('owner', 'name email');
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 const getProductById = async (req, res) => {
   try {
@@ -23,15 +24,15 @@ const createProduct = async (req, res) => {
   try {
     const { name, description, price, imageUrl, inStock } = req.body;
 
-    const product = new Product({
-      name,
-      description,
-      price,
-      imageUrl,
-      inStock,
-      owner: req.user._id // 🔥 Bağlantı burada
-    });
-
+	const product = new Product({
+	  name,
+	  description,
+	  price,
+	  imageUrl,
+	  inStock,
+	  owner: req.user._id 
+	});
+   
     const saved = await product.save();
     res.status(201).json(saved);
   } catch (err) {
