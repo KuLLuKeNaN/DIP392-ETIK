@@ -22,7 +22,16 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const { name, description, price, imageUrl, inStock } = req.body;
-    const product = new Product({ name, description, price, imageUrl, inStock });
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      imageUrl,
+      inStock,
+      owner: req.user._id // 🔥 Bağlantı burada
+    });
+
     const saved = await product.save();
     res.status(201).json(saved);
   } catch (err) {
