@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const contactRoutes = require('./routes/contactRoutes');
+const authRoutes = require('./routes/authRoutes');
+
 require('dotenv').config();
 
 const app = express();
@@ -22,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 const productRoutes = require('./routes/productRoutes');
 app.use('/api/products', productRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/auth', authRoutes);
 // Root test endpoint
 app.get('/', (req, res) => {
   res.send('API is running...');
