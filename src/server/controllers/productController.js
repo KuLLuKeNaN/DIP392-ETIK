@@ -46,6 +46,7 @@ const updateProduct = async (req, res) => {
 
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
+    
     if (product.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this product' });
     }
@@ -57,12 +58,14 @@ const updateProduct = async (req, res) => {
   }
 };
 
+
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
+    
     if (product.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to delete this product' });
     }
