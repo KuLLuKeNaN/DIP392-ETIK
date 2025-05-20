@@ -75,6 +75,10 @@ const deleteProduct = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  console.log('🔥 Product.owner:', product.owner);
+console.log('🔥 Req.user._id:', req.user._id);
+console.log('🔥 Equals:', product.owner?.toString() === req.user._id.toString());
+
 };
 
 
