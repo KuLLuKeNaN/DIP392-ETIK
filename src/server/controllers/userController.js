@@ -9,10 +9,11 @@ const updateProfile = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     if (name) user.name = name;
-    if (surname) user.surname = surname;
+    if (surname) user.surname = surname || user.surname || 'Unknown';
     if (email) user.email = email;
-    if (phone) user.phone = phone;
-    if (birthday) user.birthday = birthday;
+    if (phone) user.phone = phone || user.phone || '0000000000';
+    if (birthday) user.birthday = birthday || user.birthday || new Date('2000-01-01');
+
     if (password) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
