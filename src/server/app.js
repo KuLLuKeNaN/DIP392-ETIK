@@ -28,6 +28,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const userRoutes = require('./routes/userRoutes');
 const sellerRoutes = require('./routes/sellerRoutes');
+const pingRoutes = require('./routes/pingRoutes');
 
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
@@ -38,6 +39,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/seller', sellerRoutes);
+app.use('/api', pingRoutes);
 // Root endpoint
 app.get('/', (req, res) => {
   res.send('API is running...');
