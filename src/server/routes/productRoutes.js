@@ -11,6 +11,8 @@ const {
 
 const verifyToken = require('../middleware/verifyToken');
 
+router.get('/store/:id', getProductsByStore); 
+
 router.get('/my-products', verifyToken, getMyProducts);
 // Public routes
 router.get('/', getAllProducts);

@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Store = require('../models/Store');
 
 const getAllProducts = async (req, res) => {
   try {
@@ -24,15 +25,22 @@ const createProduct = async (req, res) => {
   try {
     const { name, description, price, imageUrl, inStock } = req.body;
 
-	const product = new Product({
-	  name,
-	  description,
-	  price,
-	  imageUrl,
-	  inStock,
-	  owner: req.user._id 
-	});
-   
+    // Kullanıcının mağazasını bul
+    const store = await Store.findOne({ owner: req.user._id });
+    if (!store) {
+      return res.status(400).json({ message: 'User does not have a store.' });
+    }
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      imageUrl,
+      inStock,
+      owner: req.user._id,
+      store: store._id 
+    });
+
     const saved = await product.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -87,6 +95,14 @@ const getMyProducts = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+const getProductsByStore = async (req, res) => {
+  try {
+    const products = await Product.find({ store: req.params.id });
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 module.exports = {
   getAllProducts,
@@ -94,6 +110,8 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  getMyProducts 
+  getMyProducts,
+  getProductsByStore
+	
 };
 
