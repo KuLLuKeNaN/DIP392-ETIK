@@ -23,11 +23,13 @@ const productRoutes = require('./routes/productRoutes');
 const authRoutes = require('./routes/authRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const storeRoutes = require('./routes/storeRoutes');
+const negotiationRoutes = require('./routes/negotiationRoutes');
 
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/stores', storeRoutes);
+app.use('/api/negotiations', negotiationRoutes);
 // Root endpoint
 app.get('/', (req, res) => {
   res.send('API is running...');
