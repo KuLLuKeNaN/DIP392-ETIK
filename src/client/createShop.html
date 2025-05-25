@@ -6,93 +6,126 @@
   <link rel="stylesheet" href="styles2.css">
   <style>
     .shop-container {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 30px;
+      max-width: 700px;
+      margin: 40px auto;
       background-color: #fff;
+      padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .shop-container h2 {
       color: #fc6601;
-      margin-bottom: 20px;
     }
 
     .shop-container label {
-      font-weight: bold;
       color: #ff1493;
-      display: block;
-      margin-top: 15px;
+      font-weight: bold;
     }
 
-    .shop-container input,
-    .shop-container textarea {
+    .shop-container input {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
+      margin: 10px 0 20px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    .frame {
-      border: 1px solid #ddd;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 20px;
-      background-color: #f9f9f9;
-    }
-
-    .frame img {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .frame input[type="file"] {
-      margin-top: 10px;
+      border-radius: 5px;
     }
 
     .btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #28a745;
-      color: white;
+      padding: 10px 15px;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
+      border-radius: 5px;
       font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      background-color: #ff1493;
     }
 
     .btn:hover {
-      background-color: #218838;
+      background-color: #e01183;
     }
 
-    .brand-wrapper { display: flex; flex-direction: column; align-items: center; }
-    .logo { width: 70px; height: 70px; object-fit: contain; margin-bottom: 5px; }
-    .company-name { font-size: 28px; font-weight: bold; margin: 0; }
-    .company-name a { text-decoration: none; color: #ff1493; }
-    input[type="search"] { width: 200px; height: 35px; padding: 6px 10px; border-radius: 5px; }
-    .dropdown { position: relative; display: inline-block; }
-    .user-icon { width: 40px; height: 40px; cursor: pointer; }
+    .product-list {
+      margin-top: 20px;
+    }
+
+    .product-item {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .brand-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    .company-name {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .company-name a {
+      text-decoration: none;
+      color: #ff1493;
+    }
+
+    input[type="search"] {
+      width: 200px;
+      height: 35px;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
     .dropdown-content {
-      display: none; position: absolute; right: 0; background-color: white;
-      min-width: 160px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      border-radius: 5px; z-index: 10;
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      border-radius: 5px;
+      z-index: 10;
     }
+
     .dropdown-content a {
-      display: block; padding: 10px 15px; text-decoration: none; color: #ff1493;
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #ff1493;
     }
-    .dropdown-content a:hover { background-color: #ffe0ec; }
-    .dropdown:hover .dropdown-content { display: block; }
+
+    .dropdown-content a:hover {
+      background-color: #ffe0ec;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- Header Section -->
 <div class="header-section">
 	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -118,56 +151,42 @@
 	</header>
 </div>
 
-<!-- Shop Form -->
+<!-- Shop Creation -->
 <div class="shop-container">
   <h2>Create Your Shop</h2>
-
   <label for="shopName">Shop Name:</label>
   <input type="text" id="shopName" placeholder="Enter your shop name">
+  <button class="btn" onclick="createShop()">Create Shop</button>
+  
 
-  <label for="accountName">Account Name:</label>
-  <input type="text" id="accountName" placeholder="Enter your account name">
 
-  <div id="productList"></div>
 
-  <button class="btn" onclick="addProductFrame()">Add Product</button>
+  <div id="shopSection" class="hidden">
+    <h3 id="shopTitle"></h3>
+    
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" placeholder="Example: Handmade Bracelet">
+
+    <label for="productPrice">Product Price ($):</label>
+    <input type="number" id="productPrice" placeholder="Example: 25">
+
+    <button class="btn" onclick="addProduct()">Add Product</button>
+
+    <div class="product-list" id="productList"></div>
+  </div>
 </div>
-
 <script>
-  function addProductFrame() {
-    const frame = document.createElement('div');
-    frame.className = 'frame';
-    frame.innerHTML = `
-      <label>Product Image:</label>
-      <input type="file" accept="image/*" onchange="loadPreview(this)">
-      <img style="display:none;">
-      
-      <label>Product Name:</label>
-      <input type="text" placeholder="e.g. Handmade Bracelet">
+  function createShop() {
+    const shopName = document.getElementById("shopName").value.trim();
 
-      <label>Brand:</label>
-      <input type="text" placeholder="e.g. Skapis Studio">
-
-      <label>Price:</label>
-      <input type="text" placeholder="e.g. $25">
-
-      <label>Usage/Description:</label>
-      <textarea placeholder="How is this product used?"></textarea>
-    `;
-    document.getElementById('productList').appendChild(frame);
-  }
-
-  function loadPreview(input) {
-    const file = input.files[0];
-    if (file) {
-      const img = input.nextElementSibling;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        img.src = e.target.result;
-        img.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
+    if (!shopName) {
+      alert("Please enter a shop name.");
+      return;
     }
+
+    // URL'e shop adını parametre olarak ekle ve yönlendir
+    const encodedShopName = encodeURIComponent(shopName);
+    window.location.href = `shopPreview.html?name=${encodedShopName}`;
   }
 </script>
 
