@@ -67,17 +67,18 @@ const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    if (product.owner.toString() !== req.user._id.toString()) {
+    if (product.owner && product.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to delete this product' });
     }
 
-    await Product.deleteOne({ _id: req.params.id }); 
+    await Product.deleteOne({ _id: req.params.id });
+
     res.json({ message: 'Product deleted' });
   } catch (err) {
+    console.error('❌ Delete Error:', err);  // 👈 log atıyoruz
     res.status(500).json({ message: err.message });
   }
 };
-
 
 
 module.exports = {
