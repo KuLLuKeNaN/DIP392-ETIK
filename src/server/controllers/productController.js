@@ -63,23 +63,21 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
-    if (!product) return res.status(404).json({ message: 'Product not found' });
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
 
-    
     if (product.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to delete this product' });
     }
 
-    await product.remove();
+    await Product.deleteOne({ _id: req.params.id }); 
     res.json({ message: 'Product deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-  console.log('🔥 Product.owner:', product.owner);
-console.log('🔥 Req.user._id:', req.user._id);
-console.log('🔥 Equals:', product.owner?.toString() === req.user._id.toString());
-
 };
+
 
 
 module.exports = {
