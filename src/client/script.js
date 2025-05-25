@@ -1,87 +1,81 @@
+// Kullanıcı kayıt işlemi
 document.getElementById('signupForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const inputs = e.target.elements;
+  const inputs = e.target.elements;
 
-    const userData = {
-        name: inputs[0].value,
-        surname: inputs[1].value,
-        birthday: inputs[2].value,
-        phone: inputs[3].value,
-        email: inputs[4].value,
-        password: inputs[5].value
-    };
+  const userData = {
+    name: inputs[0].value,
+    surname: inputs[1].value,
+    birthday: inputs[2].value,
+    phone: inputs[3].value,
+    email: inputs[4].value,
+    password: inputs[5].value
+  };
 
-    const res = await fetch('https://dip392-etik.onrender.com/api/users/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
+  try {
+    const res = await fetch('https://dip392-etik.onrender.com/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
     });
 
     const data = await res.json();
+
     if (res.ok) {
-        alert("Registration successful!");
-        // switch to signin
-        document.getElementById('signinForm').style.display = 'block';
-        document.getElementById('signupForm').style.display = 'none';
+      alert("Registration successful! You can now log in.");
+      // Giriş formuna geç
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('signinForm').style.display = 'block';
     } else {
-        alert(data.message || "Registration failed!");
+      alert(data.message || "Registration failed.");
     }
+  } catch (err) {
+    console.error(err);
+    alert("An error occurred.");
+  }
 });
+
+// Kullanıcı giriş işlemi
 document.getElementById('signinForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const inputs = e.target.elements;
+  const inputs = e.target.elements;
 
-    const credentials = {
-        email: inputs[0].value,
-        password: inputs[1].value
-    };
+  const credentials = {
+    email: inputs[0].value,
+    password: inputs[1].value
+  };
 
-    const res = await fetch('https://dip392-etik.onrender.com/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
+  try {
+    const res = await fetch('https://dip392-etik.onrender.com/api/auth/signin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials)
     });
 
     const data = await res.json();
 
-    if (res.ok) {
-        localStorage.setItem('token', data.token);
-        alert("Login successful!");
-        document.getElementById('popup').style.display = 'none';
+    if (res.ok && data.token) {
+      localStorage.setItem('token', data.token);
+      alert("Login successful!");
+      document.getElementById('popup').style.display = 'none';
     } else {
-        alert(data.message || "Login failed!");
+      alert(data.message || "Login failed.");
     }
+  } catch (err) {
+    console.error(err);
+    alert("An error occurred.");
+  }
 });
+
+// Formlar arası geçiş
 document.getElementById('switchToSignin').addEventListener('click', () => {
-    document.getElementById('signupForm').style.display = 'none';
-    document.getElementById('signinForm').style.display = 'block';
+  document.getElementById('signupForm').style.display = 'none';
+  document.getElementById('signinForm').style.display = 'block';
 });
-async function loadProducts() {
-    const res = await fetch('https://dip392-etik.onrender.com/api/products');
-    const data = await res.json();
 
-    const flashSlider = document.querySelector('.flash-discounts .slider');
-    const chosenSlider = document.querySelector('.chosen-for-you .slider');
-
-    data.forEach(product => {
-        const frame = document.createElement('div');
-        frame.className = 'frame';
-        frame.innerHTML = `
-            <img src="${product.imageUrl}" alt="${product.title}" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-            <p>${product.title} - $${product.price} - From ${product.storeName}</p>
-        `;
-
-        flashSlider.appendChild(frame.cloneNode(true));
-        chosenSlider.appendChild(frame.cloneNode(true));
-    });
-}
-
-window.addEventListener('DOMContentLoaded', loadProducts);
-window.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        document.querySelector('.dropdown-content').style.display = 'block';
-    }
+document.getElementById('switchToSignup').addEventListener('click', () => {
+  document.getElementById('signinForm').style.display = 'none';
+  document.getElementById('signupForm').style.display = 'block';
 });
