@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Account Information - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .account-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .account-form input[type="text"],
+    .account-form input[type="email"],
+    .account-form input[type="number"] {
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .photo-preview {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    .btn-save {
+      background-color: #28a745;
+    }
+
+    .btn-save:hover {
+      background-color: #218838;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    .btn-edit:hover {
+      background-color: #e0a800;
+    }
+	
+	 /* ▼▼▼ Dropdown Styles ▼▼▼ */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .user-icon {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+	 .dropdown-content {
+		display: none;
+		position: absolute;
+		right: 0;
+		background-color: white;
+		min-width: 160px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		border-radius: 5px;
+		z-index: 10;
+	  }
+
+	  .dropdown-content a {
+		display: block;
+		padding: 10px 15px;
+		text-decoration: none;
+		color: #ff1493;
+		transition: background 0.2s;
+	  }
+
+	  .dropdown-content a:hover {
+		background-color: #ff660180; /* orange!! with 50% opacity */
+	  }
+
+	  .dropdown:hover .dropdown-content {
+		display: block;
+	  }
+    /* ▲▲▲ Dropdown Styles ▲▲▲ */
+  </style>
+</head>
+<body>
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid #dee2e6;">
+	<div style="display: flex; flex-direction: column; align-items: center;">
+	  <img src="logo.png" alt="Skapis Logo" class="logo" style="width: 70px; height: 50px; object-fit: contain;">
+	  <h1 class="company-name" style="margin: 5px 0 0 0; font-size: 20px;">
+		<a href="index.html" style="text-decoration: none; color: #ff1493;">Skapis</a>
+	  </h1>
+	</div>
+
+
+  <button onclick="location.href='newpage.html'" style="background: none; border: none; cursor: pointer;">
+	<div class="dropdown">
+		<img src="icon.png" alt="User Icon" style="width: 40px; height: 40px;">
+		<div class="dropdown-content">
+			<a href="accountInfo.html">Account Info</a>
+			<a href="addressInfo.html">Address Info</a>
+			<a href="billingInfo.html">Billing Info</a>
+			<a href="helpCenter.html">Help Center</a>
+			<a href="createShop.html">Create Shop</a>
+		</div>
+	</div>
+  </button>
+</header>
+
+</head>
+<body>
+
+  <div class="container">
+    <main class="content">
+      <h2>Account Information</h2>
+
+	<form class="account-form">
+
+	  <label for="photo">Profile Photo:</label>
+	  <input type="file" id="photo" accept="image/*">
+	  <img id="photoPreview" class="photo-preview" src="#" alt="Profile Photo" style="display:none;">
+
+	  <label for="name">Name:</label>
+	  <input type="text" id="name" placeholder="Your Name">
+
+	  <label for="surname">Surname:</label>
+	  <input type="text" id="surname" placeholder="Your Surname">
+
+	  <label for="age">Age:</label>
+	  <input type="number" id="age" placeholder="Your Age">
+
+	  <label for="email">Email:</label>
+	  <input type="email" id="email" placeholder="your.email@example.com">
+
+	  <label for="password">Password:</label>
+	  <input type="password" id="password" placeholder="••••••••">
+
+	  <label for="confirmPassword">Password Confirmation:</label>
+	  <input type="password" id="confirmPassword" placeholder="Repeat your password">
+
+	  <div class="button-group">
+		<button type="button" class="btn btn-save" onclick="saveInfo()">Save</button>
+		<button type="button" class="btn btn-edit" onclick="enableEdit()">Edit</button>
+	  </div>
+	</form>  
+    </main>
+  </div>
+
+<script>
+  const photoInput = document.getElementById('photo');
+  const photoPreview = document.getElementById('photoPreview');
+
+  // Show uploaded photo preview
+  photoInput.addEventListener('change', function () {
+    const file = photoInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        photoPreview.src = e.target.result;
+        photoPreview.style.display = 'block';
+        localStorage.setItem('photo', e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function saveInfo() {
+    // Store values to localStorage
+    localStorage.setItem('name', document.getElementById('name').value);
+    localStorage.setItem('surname', document.getElementById('surname').value);
+    localStorage.setItem('age', document.getElementById('age').value);
+    localStorage.setItem('email', document.getElementById('email').value);
+    localStorage.setItem('password', document.getElementById('password').value);
+    localStorage.setItem('confirmPassword', document.getElementById('confirmPassword').value);
+
+    alert('Information saved successfully!');
+    disableForm();
+  }
+
+  function enableEdit() {
+    const inputs = document.querySelectorAll('.account-form input');
+    inputs.forEach(input => input.disabled = false);
+  }
+
+  function disableForm() {
+    const inputs = document.querySelectorAll('.account-form input');
+    inputs.forEach(input => input.disabled = true);
+  }
+
+  // Fill form if data already exists
+  window.onload = function () {
+    disableForm();
+    document.getElementById('name').value = localStorage.getItem('name') || '';
+    document.getElementById('surname').value = localStorage.getItem('surname') || '';
+    document.getElementById('age').value = localStorage.getItem('age') || '';
+    document.getElementById('email').value = localStorage.getItem('email') || '';
+    document.getElementById('password').value = localStorage.getItem('password') || '';
+    document.getElementById('confirmPassword').value = localStorage.getItem('confirmPassword') || '';
+
+    if (localStorage.getItem('photo')) {
+      photoPreview.src = localStorage.getItem('photo');
+      photoPreview.style.display = 'block';
+    }
+  }
+  
+</script>
+
+
+</body>
+</html>
