@@ -1,33 +1,33 @@
-document.getElementById('signinForm').addEventListener('submit', async function (e) {
+const baseURL = "https://dip392-etik.onrender.com";
+
+document.getElementById("signinForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
-
-  const credentials = {
-    email: formData.get('email'),
-    password: formData.get('password')
-  };
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
   try {
-    const res = await fetch('https://dip392-etik.onrender.com/api/auth/signin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials)
+    const response = await fetch(`${baseURL}/api/auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
     });
 
-    const data = await res.json();
+    const data = await response.json();
 
-    if (res.ok && data.token) {
-      // Token'ı kaydet
-      localStorage.setItem('token', data.token);
-
-      // Başarılı giriş: anasayfaya yönlendir
-      window.location.href = 'index.html';
-    } else {
-      alert(data.message || "Login failed.");
+    if (!response.ok) {
+      throw new Error(data.message || "Signin failed");
     }
+
+    // Token'ı localStorage'a kaydet
+    localStorage.setItem("authToken", data.token);
+
+    // Giriş başarılı → anasayfaya yönlendir
+    window.location.href = "index.html";  // Burayı senin verdiğin anasayfa ile eşleştirdik
+
   } catch (err) {
-    console.error(err);
-    alert("Something went wrong. Please try again.");
+    alert(err.message);
   }
 });

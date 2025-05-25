@@ -1,82 +1,61 @@
-// Sign Up (Kayıt) işlemi
-document.getElementById('signupForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+// Kullanıcı giriş yapmış mı kontrol et
+const token = localStorage.getItem("authToken");
 
-  const formData = new FormData(e.target);
+if (!token) {
+  // Token yoksa signin sayfasına yönlendir
+  window.location.href = "signin.html";
+} else {
+  console.log("User is authenticated!");
+  // Burada istersen token ile kullanıcı bilgisi de çekebilirsin
+  // örneğin:
+  /*
+  fetch("https://dip392-etik.onrender.com/api/users/me", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token
+    },
+    body: JSON.stringify({}) // güncelleme değilse GET ile endpoint eklenmeli
+  })
+    .then(res => res.json())
+    .then(data => console.log("User info:", data));
+  */
+}
+const baseURL = "https://dip392-etik.onrender.com";
+const token = localStorage.getItem("authToken");
 
-  const userData = {
-    name: formData.get('name'),
-    surname: formData.get('surname'),
-    birthday: formData.get('birthday'),
-    phone: formData.get('phone'),
-    email: formData.get('email'),
-    password: formData.get('password')
-  };
+// Giriş yapılmamışsa yönlendir
+if (!token) {
+  window.location.href = "signin.html";
+}
 
+// Ürünleri getir ve göster
+async function loadProducts() {
   try {
-    const res = await fetch('https://dip392-etik.onrender.com/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(userData)
+    const response = await fetch(`${baseURL}/api/products`);
+    const products = await response.json();
+
+    const slider = document.getElementById("productSlider");
+    slider.innerHTML = ""; // önce boşalt
+
+    products.forEach(product => {
+      const frame = document.createElement("div");
+      frame.className = "frame";
+
+      // Basit yapı – dilersen genişletebiliriz
+      frame.innerHTML = `
+        <img src="${product.imageUrl || 'example.jpg'}" alt="Product" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+        <p>${product.name} - $${product.price}</p>
+      `;
+
+      slider.appendChild(frame);
     });
 
-    const data = await res.json();
-
-    if (res.ok) {
-      alert("Sign up successful! You can now sign in.");
-      // Form geçişi
-      document.getElementById('signupForm').style.display = 'none';
-      document.getElementById('signinForm').style.display = 'block';
-    } else {
-      alert(data.message || "Sign up failed.");
-    }
   } catch (err) {
-    console.error(err);
-    alert("Something went wrong during sign up.");
+    console.error("Product load error:", err);
   }
-});
+}
 
-// Sign In (Giriş) işlemi
-document.getElementById('signinForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+// Sayfa yüklenince çağır
+window.addEventListener("DOMContentLoaded", loadProducts);
 
-  const formData = new FormData(e.target);
-
-  const credentials = {
-    email: formData.get('email'),
-    password: formData.get('password')
-  };
-
-  try {
-    const res = await fetch('https://dip392-etik.onrender.com/api/auth/signin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials)
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.token) {
-      localStorage.setItem('token', data.token);
-      alert("Sign in successful!");
-      document.getElementById('popup').style.display = 'none';
-    } else {
-      alert(data.message || "Sign in failed.");
-    }
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong during sign in.");
-  }
-});
-
-// Formlar arası geçiş: Sign Up → Sign In
-document.getElementById('switchToSignin').addEventListener('click', () => {
-  document.getElementById('signupForm').style.display = 'none';
-  document.getElementById('signinForm').style.display = 'block';
-});
-
-// Formlar arası geçiş: Sign In → Sign Up
-document.getElementById('switchToSignup').addEventListener('click', () => {
-  document.getElementById('signinForm').style.display = 'none';
-  document.getElementById('signupForm').style.display = 'block';
-});
