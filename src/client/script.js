@@ -1,16 +1,16 @@
-// Kullanıcı kayıt işlemi
+// Sign Up (Kayıt) işlemi
 document.getElementById('signupForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const inputs = e.target.elements;
+  const formData = new FormData(e.target);
 
   const userData = {
-    name: inputs[0].value,
-    surname: inputs[1].value,
-    birthday: inputs[2].value,
-    phone: inputs[3].value,
-    email: inputs[4].value,
-    password: inputs[5].value
+    name: formData.get('name'),
+    surname: formData.get('surname'),
+    birthday: formData.get('birthday'),
+    phone: formData.get('phone'),
+    email: formData.get('email'),
+    password: formData.get('password')
   };
 
   try {
@@ -23,28 +23,28 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     const data = await res.json();
 
     if (res.ok) {
-      alert("Registration successful! You can now log in.");
-      // Giriş formuna geç
+      alert("Sign up successful! You can now sign in.");
+      // Form geçişi
       document.getElementById('signupForm').style.display = 'none';
       document.getElementById('signinForm').style.display = 'block';
     } else {
-      alert(data.message || "Registration failed.");
+      alert(data.message || "Sign up failed.");
     }
   } catch (err) {
     console.error(err);
-    alert("An error occurred.");
+    alert("Something went wrong during sign up.");
   }
 });
 
-// Kullanıcı giriş işlemi
+// Sign In (Giriş) işlemi
 document.getElementById('signinForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const inputs = e.target.elements;
+  const formData = new FormData(e.target);
 
   const credentials = {
-    email: inputs[0].value,
-    password: inputs[1].value
+    email: formData.get('email'),
+    password: formData.get('password')
   };
 
   try {
@@ -58,23 +58,24 @@ document.getElementById('signinForm').addEventListener('submit', async function 
 
     if (res.ok && data.token) {
       localStorage.setItem('token', data.token);
-      alert("Login successful!");
+      alert("Sign in successful!");
       document.getElementById('popup').style.display = 'none';
     } else {
-      alert(data.message || "Login failed.");
+      alert(data.message || "Sign in failed.");
     }
   } catch (err) {
     console.error(err);
-    alert("An error occurred.");
+    alert("Something went wrong during sign in.");
   }
 });
 
-// Formlar arası geçiş
+// Formlar arası geçiş: Sign Up → Sign In
 document.getElementById('switchToSignin').addEventListener('click', () => {
   document.getElementById('signupForm').style.display = 'none';
   document.getElementById('signinForm').style.display = 'block';
 });
 
+// Formlar arası geçiş: Sign In → Sign Up
 document.getElementById('switchToSignup').addEventListener('click', () => {
   document.getElementById('signinForm').style.display = 'none';
   document.getElementById('signupForm').style.display = 'block';
