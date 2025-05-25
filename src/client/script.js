@@ -1,97 +1,87 @@
-// Sign-up Sign in Window
-		function calculateAge(birthday) {
-            const birthDate = new Date(birthday);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age;
-        }
-        document.getElementById("signupForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const birthday = document.getElementById("birthday").value;
-            const age = calculateAge(birthday);
-            if (age < 16) {
-                alert("You must be at least 16 years old to sign up.");
-                return;
-            }
-            alert("Your account has been created!");
-            document.getElementById("popup").style.display = "none";
-            document.getElementById("main-content").style.display = "block";
-        });
+document.getElementById('signupForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-        document.getElementById("signinForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            document.getElementById("popup").style.display = "none";
-            document.getElementById("main-content").style.display = "block";
-        });
+    const inputs = e.target.elements;
 
-        document.getElementById("switchToSignin").addEventListener("click", function () {
-            document.getElementById("signupForm").style.display = "none";
-            document.getElementById("signinForm").style.display = "block";
-        });
+    const userData = {
+        name: inputs[0].value,
+        surname: inputs[1].value,
+        birthday: inputs[2].value,
+        phone: inputs[3].value,
+        email: inputs[4].value,
+        password: inputs[5].value
+    };
 
+    const res = await fetch('https://dip392-etik.onrender.com/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    });
 
-// Auto-scroll sliders
-setInterval(() => {
-  document.querySelectorAll('.slider').forEach(slider => {
-    slider.scrollBy({ left: 220, behavior: 'smooth' });
-  });
-}, 3000);
-
-// Manual scroll buttons
-document.querySelectorAll('.slider-container').forEach(container => {
-  const slider = container.querySelector('.slider');
-  const btnLeft = container.querySelector('.slider-btn.left');
-  const btnRight = container.querySelector('.slider-btn.right');
-
-  btnRight.addEventListener('click', () => {
-    slider.scrollBy({ left: 220, behavior: 'smooth' });
-  });
-
-  btnLeft.addEventListener('click', () => {
-    slider.scrollBy({ left: -220, behavior: 'smooth' });
-  });
-});
-
-// Open product detail page
-document.querySelectorAll('.frame').forEach(frame => {
-  frame.addEventListener('click', () => {
-    const id = frame.getAttribute('data-id');
-    if (id) {
-      window.location.href = `product.html?item=${id}`;
+    const data = await res.json();
+    if (res.ok) {
+        alert("Registration successful!");
+        // switch to signin
+        document.getElementById('signinForm').style.display = 'block';
+        document.getElementById('signupForm').style.display = 'none';
+    } else {
+        alert(data.message || "Registration failed!");
     }
-  });
 });
+document.getElementById('signinForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-        // Product Modal Logic
-        function showProductModal(imgSrc, desc, price, shop) {
-            document.getElementById('modalImage').src = imgSrc;
-            document.getElementById('modalDescription').textContent = desc;
-            document.getElementById('modalPrice').textContent = price;
-            document.getElementById('modalShop').textContent = shop;
-            document.getElementById('productModal').style.display = 'flex';
-        }
+    const inputs = e.target.elements;
 
-        // Example: Attach to all frames dynamically later
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('.frame').forEach(frame => {
-                frame.addEventListener('click', () => {
-                    const img = frame.querySelector('img').src;
-                    const desc = frame.querySelector('p').textContent;
-                    const priceMatch = desc.match(/\$\d+/);
-                    const price = priceMatch ? priceMatch[0] : 'Unknown';
-                    const shop = desc.split('-').pop().trim();
-                    showProductModal(img, desc, price, shop);
-                });
-            });
+    const credentials = {
+        email: inputs[0].value,
+        password: inputs[1].value
+    };
 
-            document.getElementById('productModal').addEventListener('click', function (e) {
-                if (e.target === this) this.style.display = 'none';
-            });
-        });
-document.getElementById('userIcon').addEventListener('click', function() {
-  window.location.href = 'newpage.html';
+    const res = await fetch('https://dip392-etik.onrender.com/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+        localStorage.setItem('token', data.token);
+        alert("Login successful!");
+        document.getElementById('popup').style.display = 'none';
+    } else {
+        alert(data.message || "Login failed!");
+    }
+});
+document.getElementById('switchToSignin').addEventListener('click', () => {
+    document.getElementById('signupForm').style.display = 'none';
+    document.getElementById('signinForm').style.display = 'block';
+});
+async function loadProducts() {
+    const res = await fetch('https://dip392-etik.onrender.com/api/products');
+    const data = await res.json();
+
+    const flashSlider = document.querySelector('.flash-discounts .slider');
+    const chosenSlider = document.querySelector('.chosen-for-you .slider');
+
+    data.forEach(product => {
+        const frame = document.createElement('div');
+        frame.className = 'frame';
+        frame.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.title}" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+            <p>${product.title} - $${product.price} - From ${product.storeName}</p>
+        `;
+
+        flashSlider.appendChild(frame.cloneNode(true));
+        chosenSlider.appendChild(frame.cloneNode(true));
+    });
+}
+
+window.addEventListener('DOMContentLoaded', loadProducts);
+window.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        document.querySelector('.dropdown-content').style.display = 'block';
+    }
 });
