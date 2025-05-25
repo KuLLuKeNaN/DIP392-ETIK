@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Shop - Skapis</title>
+  <link rel="stylesheet" href="styles2.css">
+  <style>
+    .shop-container {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .shop-container h2 {
+      color: #fc6601;
+      margin-bottom: 20px;
+    }
+
+    .shop-container label {
+      font-weight: bold;
+      color: #ff1493;
+      display: block;
+      margin-top: 15px;
+    }
+
+    .shop-container input,
+    .shop-container textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .frame {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .frame img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .frame input[type="file"] {
+      margin-top: 10px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background-color: #218838;
+    }
+
+    .brand-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .logo { width: 70px; height: 70px; object-fit: contain; margin-bottom: 5px; }
+    .company-name { font-size: 28px; font-weight: bold; margin: 0; }
+    .company-name a { text-decoration: none; color: #ff1493; }
+    input[type="search"] { width: 200px; height: 35px; padding: 6px 10px; border-radius: 5px; }
+    .dropdown { position: relative; display: inline-block; }
+    .user-icon { width: 40px; height: 40px; cursor: pointer; }
+    .dropdown-content {
+      display: none; position: absolute; right: 0; background-color: white;
+      min-width: 160px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      border-radius: 5px; z-index: 10;
+    }
+    .dropdown-content a {
+      display: block; padding: 10px 15px; text-decoration: none; color: #ff1493;
+    }
+    .dropdown-content a:hover { background-color: #ffe0ec; }
+    .dropdown:hover .dropdown-content { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header-section">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; border-bottom: 2px solid #dee2e6;">
+    <div class="brand-wrapper">
+      <img src="logo.png" alt="Skapis Logo" class="logo">
+      <h1 class="company-name">
+        <a href="index.html">Skapis</a>
+      </h1>
+    </div>
+    <input type="search" placeholder="Search...">
+    <div class="dropdown">
+      <img src="icon.png" alt="User Icon" class="user-icon">
+      <div class="dropdown-content">
+        <a href="accountInfo.html">Account Info</a>
+        <a href="addressInfo.html">Address Info</a>
+        <a href="billingInfo.html">Billing Info</a>
+        <a href="helpCenter.html">Help Center</a>
+        <a href="createShop.html">Create Shop</a>
+        <a href="newpage.html">Home</a>
+      </div>
+    </div>
+  </header>
+</div>
+
+<!-- Shop Form -->
+<div class="shop-container">
+  <h2>Create Your Shop</h2>
+
+  <label for="shopName">Shop Name:</label>
+  <input type="text" id="shopName" placeholder="Enter your shop name">
+
+  <label for="accountName">Account Name:</label>
+  <input type="text" id="accountName" placeholder="Enter your account name">
+
+  <div id="productList"></div>
+
+  <button class="btn" onclick="addProductFrame()">Add Product</button>
+</div>
+
+<script>
+  function addProductFrame() {
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    frame.innerHTML = `
+      <label>Product Image:</label>
+      <input type="file" accept="image/*" onchange="loadPreview(this)">
+      <img style="display:none;">
+      
+      <label>Product Name:</label>
+      <input type="text" placeholder="e.g. Handmade Bracelet">
+
+      <label>Brand:</label>
+      <input type="text" placeholder="e.g. Skapis Studio">
+
+      <label>Price:</label>
+      <input type="text" placeholder="e.g. $25">
+
+      <label>Usage/Description:</label>
+      <textarea placeholder="How is this product used?"></textarea>
+    `;
+    document.getElementById('productList').appendChild(frame);
+  }
+
+  function loadPreview(input) {
+    const file = input.files[0];
+    if (file) {
+      const img = input.nextElementSibling;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        img.src = e.target.result;
+        img.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+</script>
+
+</body>
+</html>
