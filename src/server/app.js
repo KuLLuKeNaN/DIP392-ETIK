@@ -24,12 +24,14 @@ const authRoutes = require('./routes/authRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 const negotiationRoutes = require('./routes/negotiationRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/stores', storeRoutes);
 app.use('/api/negotiations', negotiationRoutes);
+app.use('/api/orders', orderRoutes);
 // Root endpoint
 app.get('/', (req, res) => {
   res.send('API is running...');
