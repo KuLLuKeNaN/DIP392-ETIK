@@ -5,7 +5,8 @@ const {
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getMyProducts 
 } = require('../controllers/productController');
 
 const verifyToken = require('../middleware/verifyToken');
