@@ -18,9 +18,11 @@ document.getElementById('signinForm').addEventListener('submit', async function 
     const data = await res.json();
 
     if (res.ok && data.token) {
+      // Token'ı kaydet
       localStorage.setItem('token', data.token);
-      alert("Login successful!");
-      window.location.href = "index.html"; // Ana sayfaya yönlendir
+
+      // Başarılı giriş: anasayfaya yönlendir
+      window.location.href = 'index.html';
     } else {
       alert(data.message || "Login failed.");
     }
