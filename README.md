@@ -1,5 +1,6 @@
 # DIP392-ETIK
 # Skapis – Online Marketplace Platform
+#VIDEO LINKN - https://drive.google.com/file/d/1UId-9wa76XM55Xcsiz_1tyoo22H7-gk-/view?usp=sharing
 
 **Skapis** is a lightweight e-commerce web platform designed for individuals to buy and sell second-hand and handmade products. The system features secure authentication, user-owned stores, product management, cart functionality, order placement, and price negotiation.
 
