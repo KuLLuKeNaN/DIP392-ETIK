@@ -11,7 +11,7 @@ const signup = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, surname, birthday, phone, email, password });
     await user.save();
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
