@@ -1,34 +1,42 @@
-document.getElementById('signupForm').addEventListener('submit', async function (e) {
+document.getElementById("signupForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
+  const form = e.target;
 
   const userData = {
-    name: formData.get('name'),
-    surname: formData.get('surname'),
-    birthday: formData.get('birthday'),
-    phone: formData.get('phone'),
-    email: formData.get('email'),
-    password: formData.get('password')
+    name: form.name.value.trim(),
+    surname: form.surname.value.trim(),
+    birthday: form.birthday.value,
+    phone: form.phone.value.trim(),
+    email: form.email.value.trim(),
+    password: form.password.value
   };
 
   try {
-    const res = await fetch('https://dip392-etik.onrender.com/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("https://dip392-etik.onrender.com/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(userData)
     });
 
-    const data = await res.json();
+    const data = await response.json();
 
-    if (res.ok) {
-      alert("Sign up successful! You can now sign in.");
-      window.location.href = "signin.html";
+    if (response.ok) {
+      // Token'ı kaydet
+		localStorage.setItem("authToken", data.token);
+		localStorage.setItem("userId", data.user.id);
+		const fullName = [data.user.name, data.user.surname].filter(Boolean).join(" ");
+		localStorage.setItem("userFullName", fullName);
+      
+      // Kullanıcıyı yönlendir (örnek: index.html, istersen değiştir)
+      window.location.href = "index.html";
     } else {
-      alert(data.message || "Sign up failed.");
+      alert("Sign up failed: " + (data.message || "Unknown error"));
     }
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong. Please try again.");
+
+  } catch (error) {
+    alert("Network error: " + error.message);
   }
 });

@@ -1,44 +1,77 @@
+document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("authToken");
+  if (!token) {
+    window.location.href = "signin.html";
+    return;
+  }
 
-const baseURL = "https://dip392-etik.onrender.com";
+  // Kullanıcının adını sağ üste yaz
+  const name = localStorage.getItem("userFullName");
+  if (name) {
+	  const userIcon = document.querySelector(".dropdown");
+	  const nameSpan = document.createElement("div");
+	  nameSpan.textContent = name;
+	  nameSpan.style.marginTop = "5px";
+	  nameSpan.style.color = "#FF1493";
+	  nameSpan.style.fontWeight = "bold";
+	  nameSpan.style.fontSize = "14px";
+	  nameSpan.style.textAlign = "center";
+	  userIcon.appendChild(nameSpan);
+  }
 
-// Token kontrolü
-const token = localStorage.getItem("authToken");
-if (!token) {
-  window.location.href = "signin.html";
-}
-
-// Ürünleri yükle
-async function loadProducts() {
   try {
-    const response = await fetch(`${baseURL}/api/products`);
-    const products = await response.json();
+    const response = await fetch("https://dip392-etik.onrender.com/api/products", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-    const slider = document.getElementById("productSlider");
-    slider.innerHTML = "";
-
-    if (!products.length) {
-      slider.innerHTML = "<p>No products available right now.</p>";
-      return;
+    if (!response.ok) {
+      throw new Error("Unauthorized or failed to fetch products.");
     }
 
-    products.forEach(product => {
-      const frame = document.createElement("div");
-      frame.className = "frame";
+    const products = await response.json();
+    renderProducts(products);
 
-      const image = product.imageUrl || "example.jpg";
-
-      frame.innerHTML = `
-        <img src="${image}" alt="${product.name}" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-        <p>${product.name} - $${product.price}</p>
-      `;
-
-      slider.appendChild(frame);
-    });
-  } catch (err) {
-    console.error("Error loading products:", err);
-    document.getElementById("productSlider").innerHTML = "<p>Error loading products.</p>";
+  } catch (error) {
+    alert("Session expired or failed to fetch data.");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userFullName");
+    window.location.href = "signin.html";
   }
+});
+
+function renderProducts(products) {
+  const sliders = document.querySelectorAll(".slider");
+  sliders.forEach(slider => slider.innerHTML = ""); // temizle
+
+  products.forEach(product => {
+    const card = document.createElement("div");
+    card.className = "frame";
+
+    card.innerHTML = `
+      <img src="${product.imageUrl}" alt="${product.name}" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
+      <p><strong>${product.name}</strong><br>$${product.price.toFixed(2)}<br>From ${product.owner?.name || "Unknown Store"}</p>
+      <button class="btn-buy" onclick="buyProduct('${product._id}')">BUY</button>
+      <button class="btn-negotiate" onclick="negotiateProduct('${product._id}')">NEGOTIATE</button>
+    `;
+
+    sliders[0].appendChild(card); // ilk slider'a ekle
+  });
 }
 
-// Sayfa yüklenince çalıştır
-window.addEventListener("DOMContentLoaded", loadProducts);
+function buyProduct(productId) {
+  alert(`BUY clicked for product ID: ${productId}`);
+}
+
+function negotiateProduct(productId) {
+  alert(`NEGOTIATE clicked for product ID: ${productId}`);
+}
+
+function logout() {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("userFullName");
+  window.location.href = "signin.html";
+}
