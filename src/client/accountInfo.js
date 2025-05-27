@@ -4,7 +4,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "signin.html";
     return;
   }
+  try {
+    const userRes = await fetch("https://dip392-etik.onrender.com/api/users/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
+    if (userRes.ok) {
+      const userData = await userRes.json();
+      const fullName = `${userData.name} ${userData.surname}`;
+
+      const userIcon = document.querySelector(".dropdown");
+      const nameDiv = document.createElement("div");
+      nameDiv.textContent = fullName;
+      nameDiv.style.marginTop = "5px";
+      nameDiv.style.color = "#FF1493";
+      nameDiv.style.fontWeight = "bold";
+      nameDiv.style.fontSize = "14px";
+      nameDiv.style.textAlign = "center";
+      userIcon.appendChild(nameDiv);
+    } else {
+      throw new Error("Failed to fetch user info");
+    }
+  } catch (error) {
+    console.error("User fetch error:", error);
+    logout();
+    return;
+  }
+	
   const nameInput = document.getElementById("name");
   const surnameInput = document.getElementById("surname");
   const emailInput = document.getElementById("email");
@@ -14,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Başta input'ları pasifleştir
   disableInputs();
-
+	
   try {
     const res = await fetch("https://dip392-etik.onrender.com/api/users/me", {
       headers: { Authorization: `Bearer ${token}` }

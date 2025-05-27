@@ -2,56 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Create Shop - Skapis</title>
+  <title>Help Center - Skapis</title>
   <link rel="stylesheet" href="styles2.css">
   <style>
-    .shop-container {
+    .help-container {
       max-width: 700px;
-      margin: 40px auto;
+      margin: 30px auto;
+      padding: 40px;
       background-color: #fff;
-      padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .shop-container h2 {
+    .help-container h2 {
       color: #fc6601;
+      margin-bottom: 20px;
     }
 
-    .shop-container label {
-      color: #ff1493;
+    .help-container label {
       font-weight: bold;
+      color: #ff1493;
+      display: block;
+      margin-top: 15px;
     }
 
-    .shop-container input {
+    .help-container input,
+    .help-container textarea {
       width: 100%;
       padding: 10px;
-      margin: 10px 0 20px;
+      margin-top: 5px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
     }
 
-    .btn {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      color: #fff;
-      cursor: pointer;
-      background-color: #ff1493;
+    .help-container textarea {
+      resize: vertical;
+      height: 120px;
     }
 
-    .btn:hover {
-      background-color: #e01183;
-    }
-
-    .product-list {
+    .help-container button {
       margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    .product-item {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+    .help-container button:hover {
+      background-color: #218838;
     }
 
     .brand-wrapper {
@@ -92,13 +95,19 @@
       display: inline-block;
     }
 
+    .user-icon {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
     .dropdown-content {
       display: none;
       position: absolute;
       right: 0;
       background-color: white;
       min-width: 160px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       border-radius: 5px;
       z-index: 10;
     }
@@ -117,15 +126,11 @@
     .dropdown:hover .dropdown-content {
       display: block;
     }
-
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 <body>
 
-<!-- Header Section -->
+<!-- Header -->
 <div class="header-section">
 	<header style="display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; border-bottom: 2px solid #FE7D6A60;">
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -151,52 +156,48 @@
 	</header>
 </div>
 
-<!-- Shop Creation -->
-<div class="shop-container">
-  <h2>Create Your Shop</h2>
-  <label for="shopName">Shop Name:</label>
-  <input type="text" id="shopName" placeholder="Enter your shop name">
-  <button class="btn" onclick="createShop()">Create Shop</button>
-  
+<!-- Help Form -->
+<div class="help-container">
+  <h2>Contact Help Center</h2>
 
+  <form id="helpForm">
+    <label for="fullName">Name & Surname:</label>
+    <input type="text" id="fullName" placeholder="e.g. Jane Doe" required>
 
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" placeholder="e.g. +371 12345678" required>
 
- <div id="shopSection">
-   <h3 id="shopTitle">Your Products</h3>
-   <label for="productName">Product Name:</label>
-   <input type="text" id="productName">
-   <label for="productPrice">Product Price ($):</label>
-   <input type="number" id="productPrice">
-   
-	<label for="productDescription">Description:</label>
-	<input type="text" id="productDescription">
-	
-	<label for="productImage">Image URL:</label>
-	<input type="text" id="productImage">
-	
-	<div style="display: flex; align-items: center; gap: 8px; margin: 10px 0 20px;">
-	  <label for="productStock" style="color: #ff1493; font-weight: bold;">In Stock</label>
-	  <input type="checkbox" id="productStock">
-	</div>
-	<button class="btn" onclick="addProduct()">Add Product</button>
-	<button class="btn hidden" id="updateBtn" onclick="updateProduct()">Update Product</button>
-   <div class="product-list" id="productList"></div>
- </div>
- <hr style="margin: 40px 0;">
+    <label for="email">Email:</label>
+    <input type="email" id="email" placeholder="e.g. janedoe@example.com" required>
 
- <div id="dashboardSection">
-   <h2 style="color:#fc6601;">Seller Dashboard</h2>
-   <p><strong>Total Sales:</strong> <span id="totalSales">-</span></p>
-   <p><strong>Total Revenue:</strong> $<span id="totalRevenue">-</span></p>
+    <label for="subject">Problem/Request Title:</label>
+    <input type="text" id="subject" placeholder="e.g. I can’t access my account" required>
 
-   <h3 style="margin-top:30px;">Sold Products</h3>
-   <ul id="soldProductsList"></ul>
+    <label for="description">Detailed Description:</label>
+    <textarea id="description" placeholder="Describe your issue or request in detail..." required></textarea>
 
-   <h3 style="margin-top:30px;">Incoming Offers</h3>
-   <ul id="offersList"></ul>
- </div>
+    <button type="submit">Submit Request</button>
+  </form>
 </div>
-<script src="createShop.js"></script>
+
+<script>
+  document.getElementById('helpForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const data = {
+      fullName: document.getElementById('fullName').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      subject: document.getElementById('subject').value,
+      description: document.getElementById('description').value
+    };
+
+    localStorage.setItem('helpRequest', JSON.stringify(data));
+
+    alert('Your request has been submitted. We will contact you shortly.');
+    this.reset();
+  });
+</script>
 
 </body>
 </html>

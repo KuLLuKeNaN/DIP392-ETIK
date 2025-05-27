@@ -8,6 +8,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "signin.html";
     return;
   }
+  try {
+    const userRes = await fetch("https://dip392-etik.onrender.com/api/users/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (userRes.ok) {
+      const userData = await userRes.json();
+      const fullName = `${userData.name} ${userData.surname}`;
+
+      const userIcon = document.querySelector(".dropdown");
+      const nameDiv = document.createElement("div");
+      nameDiv.textContent = fullName;
+      nameDiv.style.marginTop = "5px";
+      nameDiv.style.color = "#FF1493";
+      nameDiv.style.fontWeight = "bold";
+      nameDiv.style.fontSize = "14px";
+      nameDiv.style.textAlign = "center";
+      userIcon.appendChild(nameDiv);
+    } else {
+      throw new Error("Failed to fetch user info");
+    }
+  } catch (error) {
+    console.error("User fetch error:", error);
+    logout();
+    return;
+  }
 
   try {
     const res = await fetch("https://dip392-etik.onrender.com/api/stores/me", {
@@ -18,8 +47,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const store = await res.json();
       storeId = store._id;
       document.getElementById("shopTitle").textContent = `Your Shop: ${store.name}`;
-      document.getElementById("shopSection").classList.remove("hidden");
-      await loadMyProducts();
+	  document.getElementById("shopSection").classList.remove("hidden");
+	  await loadMyProducts();
+	  await loadDashboard(); // ✅ DASHBOARD YÜKLENİYOR
     } else {
       alert("You must create a shop first.");
     }
@@ -187,5 +217,40 @@ async function updateProduct() {
 
   } catch (err) {
     console.error("Update error:", err);
+  }
+}
+async function loadDashboard() {
+  try {
+    const res = await fetch("https://dip392-etik.onrender.com/api/seller/dashboard", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) throw new Error("Unauthorized");
+
+    const data = await res.json();
+
+    document.getElementById("totalSales").textContent = data.totalSales || 0;
+    document.getElementById("totalRevenue").textContent = (data.totalRevenue || 0).toFixed(2);
+
+    const soldList = document.getElementById("soldProductsList");
+    soldList.innerHTML = "";
+
+    data.soldProducts.forEach(p => {
+      const li = document.createElement("li");
+      li.textContent = `${p.name} - $${p.price.toFixed(2)} (Sold to ${p.buyer?.name || "unknown"})`;
+      soldList.appendChild(li);
+    });
+
+    const offersList = document.getElementById("offersList");
+    offersList.innerHTML = "";
+
+    data.offers.forEach(o => {
+      const li = document.createElement("li");
+      li.textContent = `Offer on ${o.product?.name || "unknown"}: $${o.price} from ${o.buyer?.email || "someone"}`;
+      offersList.appendChild(li);
+    });
+
+  } catch (err) {
+    console.error("Dashboard load error:", err);
   }
 }

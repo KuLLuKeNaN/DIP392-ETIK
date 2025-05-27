@@ -77,10 +77,37 @@ function renderProducts(products) {
   });
 }
 
-function buyProduct(productId) {
-  alert(`BUY clicked for product ID: ${productId}`);
-}
+async function buyProduct(productId) {
+  const token = localStorage.getItem("authToken");
+  if (!token) {
+    alert("Please sign in to add to cart.");
+    window.location.href = "signin.html";
+    return;
+  }
 
+  try {
+    const res = await fetch("https://dip392-etik.onrender.com/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ productId })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Added to cart!");
+    } else {
+      alert("Failed to add: " + (data.message || "Unknown error"));
+    }
+
+  } catch (err) {
+    console.error("Add to cart error:", err);
+    alert("Something went wrong.");
+  }
+}
 function negotiateProduct(productId) {
   alert(`NEGOTIATE clicked for product ID: ${productId}`);
 }
