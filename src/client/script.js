@@ -5,20 +5,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Kullanıcının adını sağ üste yaz
-  const name = localStorage.getItem("userFullName");
-  if (name) {
-	  const userIcon = document.querySelector(".dropdown");
-	  const nameSpan = document.createElement("div");
-	  nameSpan.textContent = name;
-	  nameSpan.style.marginTop = "5px";
-	  nameSpan.style.color = "#FF1493";
-	  nameSpan.style.fontWeight = "bold";
-	  nameSpan.style.fontSize = "14px";
-	  nameSpan.style.textAlign = "center";
-	  userIcon.appendChild(nameSpan);
+  // Kullanıcı adını backend'den al ve göster
+  try {
+    const userRes = await fetch("https://dip392-etik.onrender.com/api/users/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (userRes.ok) {
+      const userData = await userRes.json();
+      const fullName = `${userData.name} ${userData.surname}`;
+
+      const userIcon = document.querySelector(".dropdown");
+      const nameDiv = document.createElement("div");
+      nameDiv.textContent = fullName;
+      nameDiv.style.marginTop = "5px";
+      nameDiv.style.color = "#FF1493";
+      nameDiv.style.fontWeight = "bold";
+      nameDiv.style.fontSize = "14px";
+      nameDiv.style.textAlign = "center";
+      userIcon.appendChild(nameDiv);
+    } else {
+      throw new Error("Failed to fetch user info");
+    }
+  } catch (error) {
+    console.error("User fetch error:", error);
+    logout();
+    return;
   }
 
+  // Ürünleri backend'den çek ve göster
   try {
     const response = await fetch("https://dip392-etik.onrender.com/api/products", {
       method: "GET",
@@ -35,10 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderProducts(products);
 
   } catch (error) {
-    alert("Session expired or failed to fetch data.");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userFullName");
-    window.location.href = "signin.html";
+    alert("Session expired or failed to fetch products.");
+    logout();
   }
 });
 
@@ -72,6 +88,5 @@ function negotiateProduct(productId) {
 function logout() {
   localStorage.removeItem("authToken");
   localStorage.removeItem("userId");
-  localStorage.removeItem("userFullName");
   window.location.href = "signin.html";
 }

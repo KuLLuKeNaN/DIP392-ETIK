@@ -1,0 +1,191 @@
+let token = "";
+let storeId = "";
+let editingProductId = null;
+// Sayfa yüklendiğinde token kontrol + mağaza kontrol + ürün yükleme
+document.addEventListener("DOMContentLoaded", async () => {
+  token = localStorage.getItem("authToken");
+  if (!token) {
+    window.location.href = "signin.html";
+    return;
+  }
+
+  try {
+    const res = await fetch("https://dip392-etik.onrender.com/api/stores/me", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (res.ok) {
+      const store = await res.json();
+      storeId = store._id;
+      document.getElementById("shopTitle").textContent = `Your Shop: ${store.name}`;
+      document.getElementById("shopSection").classList.remove("hidden");
+      await loadMyProducts();
+    } else {
+      alert("You must create a shop first.");
+    }
+
+  } catch (err) {
+    console.error("Error getting shop:", err);
+    alert("Error loading shop info.");
+  }
+});
+
+async function addProduct() {
+  const name = document.getElementById("productName").value.trim();
+  const description = document.getElementById("productDescription").value.trim();
+  const price = parseFloat(document.getElementById("productPrice").value);
+  const imageUrl = document.getElementById("productImage").value.trim();
+  const inStock = document.getElementById("productStock").checked;
+
+  if (!name || isNaN(price)) {
+    alert("Please fill out product name and price.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://dip392-etik.onrender.com/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        price,
+        imageUrl,
+        inStock,
+        store: storeId
+      })
+    });
+
+    if (res.ok) {
+      alert("Product added.");
+      clearProductForm();
+      await loadMyProducts();
+    } else {
+      const data = await res.json();
+      alert("Add failed: " + (data.message || "Unknown error"));
+    }
+
+  } catch (err) {
+    console.error("Add product error:", err);
+    alert("Server error.");
+  }
+}
+
+function clearProductForm() {
+  document.getElementById("productName").value = "";
+  document.getElementById("productDescription").value = "";
+  document.getElementById("productPrice").value = "";
+  document.getElementById("productImage").value = "";
+  document.getElementById("productStock").checked = false;
+}
+let currentProducts = []; // dışarıda tanımlanmalı
+async function loadMyProducts() {
+  try {
+    const res = await fetch("https://dip392-etik.onrender.com/api/products/my-products", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const products = await res.json();
+    currentProducts = products; // doğru yere aldık ✅
+
+    const productList = document.getElementById("productList");
+    productList.innerHTML = "";
+
+    products.forEach(prod => {
+      const item = document.createElement("div");
+      item.className = "product-item";
+	  item.innerHTML = `
+	    <strong>${prod.name}</strong> - $${prod.price.toFixed(2)}<br>
+	    <em>${prod.description || ""}</em><br>
+	    <button class="btn" onclick="editProduct('${prod._id}')">Edit</button>
+	    <button class="btn" onclick="deleteProduct('${prod._id}')">Delete</button>
+	    <hr>
+	  `;
+      productList.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error("loadMyProducts error:", err);
+  }
+}
+
+async function deleteProduct(id) {
+  if (!confirm("Delete this product?")) return;
+
+  try {
+    const res = await fetch(`https://dip392-etik.onrender.com/api/products/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (res.ok) {
+      alert("Product deleted.");
+      await loadMyProducts();
+    } else {
+      alert("Delete failed.");
+    }
+  } catch (err) {
+    console.error("Delete error:", err);
+  }
+}
+
+function editProduct(id) {
+  const product = currentProducts.find(p => p._id === id);
+  if (!product) return;
+
+  editingProductId = id;
+
+  // Formu doldur
+  document.getElementById("productName").value = product.name;
+  document.getElementById("productDescription").value = product.description || "";
+  document.getElementById("productPrice").value = product.price;
+  document.getElementById("productImage").value = product.imageUrl || "";
+  document.getElementById("productStock").checked = product.inStock;
+
+  // Butonları değiştir
+  document.querySelector("button[onclick='addProduct()']").classList.add("hidden");
+  document.getElementById("updateBtn").classList.remove("hidden");
+}
+async function updateProduct() {
+  if (!editingProductId) return;
+
+  const name = document.getElementById("productName").value.trim();
+  const description = document.getElementById("productDescription").value.trim();
+  const price = parseFloat(document.getElementById("productPrice").value);
+  const imageUrl = document.getElementById("productImage").value.trim();
+  const inStock = document.getElementById("productStock").checked;
+
+  if (!name || isNaN(price)) {
+    alert("Please fill out name and price.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`https://dip392-etik.onrender.com/api/products/${editingProductId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, description, price, imageUrl, inStock })
+    });
+
+    if (res.ok) {
+      alert("Product updated.");
+      editingProductId = null;
+      clearProductForm();
+      document.getElementById("updateBtn").classList.add("hidden");
+      document.querySelector("button[onclick='addProduct()']").classList.remove("hidden");
+      await loadMyProducts();
+    } else {
+      const data = await res.json();
+      alert("Update failed: " + (data.message || "Unknown error"));
+    }
+
+  } catch (err) {
+    console.error("Update error:", err);
+  }
+}
