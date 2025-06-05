@@ -272,87 +272,14 @@
 
     <section class="flash-discounts">
     <h2>Flash Discounts!!</h2>
-    <div class="slider-container">
-        <button class="slider-btn left">←</button>
-        <div class="slider">
-            <!-- 10 Items with Images -->
-            <div class="frame" data-id="1">
-				<img src="images.jpg" alt="Discount Item 1" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-				<p> Example Slightly Used Bag- Medium Size - $15 - From Blabla Store </p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-			</div>
-			
-			<div class="frame">
-			  <img src="example.jpg" alt="Discount Item" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-			  <p>Item 1 - Size M - $10</p>
-			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-			</div>
-            
-            <div class="frame">
-                <img src="indir.jpg" alt="Discount Item 3" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Example Furniture - $30 - From Blabla Store</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="tshirtironmaiden.jpg" alt="Discount Item 4" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Example Iron Maiden Tshirt - Size M - $40</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="bracelets.jpg" alt="Discount Item 5" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Example Handmade Bracelet - $50</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="handmade.jpg" alt="Discount Item 6" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Item 6 - Size XL - $60</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="example.jpg" alt="Discount Item 7" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Item 7 - Size S - $70</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="example.jpg" alt="Discount Item 8" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Item 8 - Size M - $80</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="handmade.jpg" alt="Discount Item 9" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Item 9 - Size L - $90</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-            <div class="frame">
-                <img src="exampletshirt.jpg" alt="Discount Item 10" style="width: 120px; height: 110px; object-fit: contain; margin-bottom: 2px;">
-                <p>Item 10 - Size XL - $100</p>
-  			  <button class="btn-buy" onclick="buyProduct('Item 1')">BUY</button>
-  			  <button class="btn-negotiate" onclick="negotiateProduct('Item 1')">NEGOTIATE</button>
-            </div>
-        </div>
-        <button class="slider-btn right">→</button>
-    </div>
+	<div class="slider-container">
+	  <button id="prevBtn">◀</button>
+	  <div class="slider"></div>
+	  <button id="nextBtn">▶</button>
+	</div>
 </section>
 
-    <section class="chosen-for-you">
-        <h2>Chosen For You!!</h2>
-        <div class="slider-container">
-            <button class="slider-btn left">←</button>
-            <div class="slider">
-                
-			</div>
-            <button class="slider-btn right">→</button>
-        </div>
-    </section>
+   
     <script src="script.js"></script>
 	<script>
 	  function filterProducts() {

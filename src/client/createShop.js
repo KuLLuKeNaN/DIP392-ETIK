@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	  document.getElementById("shopSection").classList.remove("hidden");
 	  await loadMyProducts();
 	  await loadDashboard(); // ✅ DASHBOARD YÜKLENİYOR
+	  await loadNegotiationsForSeller(); // ✅ TEKLİFLERİ YÜKLE
     } else {
       alert("You must create a shop first.");
     }
@@ -252,5 +253,61 @@ async function loadDashboard() {
 
   } catch (err) {
     console.error("Dashboard load error:", err);
+  }
+}
+
+async function loadNegotiationsForSeller() {
+  const token = localStorage.getItem("authToken");
+  if (!token) return;
+
+  try {
+    // Kullanıcı bilgisi (kendi ID'mizi almak için)
+    const userRes = await fetch("https://dip392-etik.onrender.com/api/users/me", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const userData = await userRes.json();
+    const myUserId = userData._id;
+
+    // Negotiation'ları çek
+    const res = await fetch("https://dip392-etik.onrender.com/api/negotiations/me", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const negotiations = await res.json();
+
+    const container = document.getElementById("offersContainer");
+    container.innerHTML = "";
+
+    if (!negotiations.length) {
+      container.innerHTML = "<p>No negotiation offers yet.</p>";
+      return;
+    }
+
+    for (const offer of negotiations) {
+      // Ürünü detaylı çek (teklif edilen ürün)
+      const prodRes = await fetch(`https://dip392-etik.onrender.com/api/products/${offer.product}`);
+      const product = await prodRes.json();
+	  console.log("Owner for product:", product.owner);
+      // Sadece bana ait ürünleri göster
+	  if (
+	    product.owner === myUserId ||           // string eşleşme
+	    product.owner?._id === myUserId         // object ise
+	  ) {
+	    const item = document.createElement("div");
+	    item.className = "offer-item";
+	    item.innerHTML = `
+	      <p><strong>Product:</strong> ${product.name}</p>
+	      <p><strong>Offered Price:</strong> $${offer.offeredPrice}</p>
+	      <p><strong>Status:</strong> ${offer.status}</p>
+	      ${offer.status === "pending" ? `
+	        <button class="btn" onclick="respondNegotiation('${offer._id}', 'accepted')">Accept</button>
+	        <button class="btn" onclick="respondNegotiation('${offer._id}', 'rejected')">Reject</button>
+	      ` : ""}
+	    `;
+	    container.appendChild(item);
+	  }
+    }
+
+  } catch (err) {
+    console.error("Negotiation fetch error:", err);
   }
 }

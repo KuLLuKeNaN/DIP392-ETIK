@@ -75,6 +75,29 @@ function renderProducts(products) {
 
     sliders[0].appendChild(card); // ilk slider'a ekle
   });
+  const slider = sliders[0];
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    if (prevBtn && nextBtn && slider) {
+      prevBtn.addEventListener("click", () => {
+        slider.scrollBy({ left: -300, behavior: "smooth" });
+      });
+
+      nextBtn.addEventListener("click", () => {
+        slider.scrollBy({ left: 300, behavior: "smooth" });
+      });
+
+      setInterval(() => {
+        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+
+        if (Math.ceil(slider.scrollLeft) >= maxScrollLeft) {
+          slider.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          slider.scrollBy({ left: 300, behavior: "smooth" });
+        }
+      }, 2000);
+    }
 }
 
 async function buyProduct(productId) {
@@ -108,12 +131,50 @@ async function buyProduct(productId) {
     alert("Something went wrong.");
   }
 }
-function negotiateProduct(productId) {
-  alert(`NEGOTIATE clicked for product ID: ${productId}`);
-}
+async function negotiateProduct(productId) {
+  const token = localStorage.getItem("authToken");
+  if (!token) {
+    alert("Please sign in to negotiate.");
+    return;
+  }
 
+  const input = prompt("Enter your offer price:");
+  const offeredPrice = parseFloat(input);
+
+  if (isNaN(offeredPrice) || offeredPrice <= 0) {
+    alert("Invalid price. Please enter a valid number.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://dip392-etik.onrender.com/api/negotiations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        productId: productId,
+        offeredPrice: offeredPrice
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Offer sent! We'll notify you if it's accepted.");
+    } else {
+      alert("Failed to send offer: " + (data.message || "Unknown error"));
+    }
+
+  } catch (error) {
+    console.error("Negotiation error:", error);
+    alert("Failed to send negotiation request.");
+  }
+}
 function logout() {
   localStorage.removeItem("authToken");
   localStorage.removeItem("userId");
   window.location.href = "signin.html";
 }
+
