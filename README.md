@@ -21,7 +21,7 @@ The frontend is built using **HTML, CSS, and Vanilla JavaScript**, and the backe
 ---
 
 ##  Setup & Run Instructions
-If you have account just open signin.html or if you dont have open signup.html 
+Download all the files. If you have account just open src/client/signin.html or if you dont have open src/client/signup.html 
 
 ## Name	Role	Contribution Summary
 Irmak Kürekci:	Frontend Developer  
