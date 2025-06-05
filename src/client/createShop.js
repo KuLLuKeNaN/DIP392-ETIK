@@ -60,7 +60,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert("Error loading shop info.");
   }
 });
+async function createShop() {
+  const shopName = prompt("Enter your shop name:");
+  if (!shopName || shopName.trim() === "") {
+    alert("Shop name is required.");
+    return;
+  }
 
+  try {
+    const response = await fetch("https://dip392-etik.onrender.com/api/stores", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ name: shopName })
+    });
+
+    if (response.ok) {
+      const newStore = await response.json();
+      alert("Shop created successfully!");
+      window.location.reload(); // mağaza yaratıldıktan sonra sayfayı yenile
+    } else {
+      const data = await response.json();
+      alert("Error creating shop: " + (data.message || "Unknown error"));
+    }
+  } catch (err) {
+    console.error("Create shop error:", err);
+    alert("Server error while creating shop.");
+  }
+}
 async function addProduct() {
   const name = document.getElementById("productName").value.trim();
   const description = document.getElementById("productDescription").value.trim();
